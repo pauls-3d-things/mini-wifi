@@ -1,0 +1,30 @@
+#ifndef MINI_WIFI_H
+#define MINI_WIFI_H
+
+#include <Arduino.h>
+
+class MiniWifi {
+ private:
+  const char* hostName;
+  const char* wifiSsid;
+  const char* wifiPass;
+  uint16_t wifiWaitDelay;
+  Stream* debugStream;
+  boolean joinedWifi;
+
+ public:
+  MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
+
+  void setWifiWaitDelay(uint16_t delay);
+  void setDebugStream(Stream* stream);
+
+  void joinWifi();
+  void checkWifi();
+
+  void createWifi();
+
+  void begin();
+  int get(const char* url, char* resultBuf, int resultBufLen);
+};
+
+#endif
