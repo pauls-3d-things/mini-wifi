@@ -19,7 +19,11 @@ class MiniWifi {
   void setDebugStream(Stream* stream);
 
   void joinWifi();
+
   void checkWifi();
+  bool isConnected();
+  int32_t getSignalStrength();
+  uint8_t getSignalQuality();
 
   void createWifi();
 

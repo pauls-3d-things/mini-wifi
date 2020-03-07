@@ -3,7 +3,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 
-MiniWifi::MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass) {
+MiniWifi::MiniWifi(const char *hostName, const char *wifiSsid, const char *wifiPass) {
   this->hostName = hostName;
   this->wifiSsid = wifiSsid;
   this->wifiPass = wifiPass;
@@ -35,6 +35,7 @@ void MiniWifi::joinWifi() {
 
 void MiniWifi::checkWifi() {
   if (!joinedWifi) {
+    joinWifi();
     return;
   }
 
@@ -45,6 +46,21 @@ void MiniWifi::checkWifi() {
     joinWifi();
   }
   yield();
+}
+
+bool MiniWifi::isConnected() { return WiFi.status() == WL_CONNECTED; }
+int32_t MiniWifi::getSignalStrength() { return WiFi.RSSI(); }
+uint8_t MiniWifi::getSignalQuality() {
+  int32_t rssi = getSignalStrength();
+  uint8_t quality = 0;
+  if (rssi < -100) {
+    quality = 0;
+  } else if (rssi > -50) {
+    quality = 100;
+  } else {
+    quality = 2 * (rssi + 100);
+  }
+  return quality;
 }
 
 void MiniWifi::createWifi() {
@@ -62,9 +78,9 @@ void MiniWifi::createWifi() {
 }
 
 void MiniWifi::setWifiWaitDelay(uint16_t delay) { wifiWaitDelay = delay; }
-void MiniWifi::setDebugStream(Stream* stream) { debugStream = stream; }
+void MiniWifi::setDebugStream(Stream *stream) { debugStream = stream; }
 
-int MiniWifi::get(const char* url, char* resultBuf, int resultBufLen) {
+int MiniWifi::get(const char *url, char *resultBuf, int resultBufLen) {
   int bytesRead = 0;
 
   HTTPClient http;
