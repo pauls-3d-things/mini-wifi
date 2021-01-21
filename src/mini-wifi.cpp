@@ -1,21 +1,39 @@
 
 #include "mini-wifi.h"
+
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
+
+#define FPM_SLEEP_MAX_TIME 0xFFFFFFF
 
 MiniWifi::MiniWifi(const char *hostName, const char *wifiSsid, const char *wifiPass) {
   this->hostName = hostName;
   this->wifiSsid = wifiSsid;
   this->wifiPass = wifiPass;
-  this->wifiWaitDelay = 4000;
+  this->wifiWaitDelay = 6000;
+  this->wifiWaitRetries = 2;
   this->debugStream = NULL;
   this->joinedWifi = false;
+}
+void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
+
+void MiniWifi::disableWiFi() {
+  // Serial.println("diconnecting client and wifi");
+  // client.disconnect();
+  wifi_station_disconnect();
+  wifi_set_opmode(NULL_MODE);
+  wifi_set_sleep_type(MODEM_SLEEP_T);
+  wifi_fpm_open();
+  wifi_fpm_do_sleep(FPM_SLEEP_MAX_TIME);
 }
 
 void MiniWifi::joinWifi() {
   joinedWifi = true;
   WiFi.hostname(hostName);
   WiFi.mode(WIFI_STA);
+
+  uint16_t retries = 0;
+
   do {
     if (debugStream != NULL) {
       debugStream->print("Connecting to WiFi ");
@@ -23,13 +41,25 @@ void MiniWifi::joinWifi() {
       debugStream->println("...");
     }
     WiFi.begin(wifiSsid, wifiPass);
-    delay(wifiWaitDelay);
-  } while (WiFi.status() != WL_CONNECTED);
+    // below waits at most wifiWaitDelay millis.
+    unsigned long now = millis();
+    while (now + wifiWaitDelay > millis()) {
+      delay(50);
+      if (WiFi.status() == WL_CONNECTED) {
+        break;
+      }
+    }
+    retries++;
+  } while (WiFi.status() != WL_CONNECTED && retries <= wifiWaitRetries);
 
   if (debugStream != NULL) {
-    debugStream->print("Connected to WiFi ");
-    debugStream->print("IP: ");
-    debugStream->println(WiFi.localIP().toString());
+    if (WiFi.status() != WL_CONNECTED) {
+      debugStream->print("Connected to WiFi ");
+      debugStream->print("IP: ");
+      debugStream->println(WiFi.localIP().toString());
+    } else {
+      debugStream->print("Connecting to WiFi failed");
+    }
   }
 }
 
@@ -42,6 +72,7 @@ void MiniWifi::checkWifi() {
   if (debugStream != NULL) {
     debugStream->println("Checking WiFi...");
   }
+
   if (WiFi.status() != WL_CONNECTED) {
     joinWifi();
   }

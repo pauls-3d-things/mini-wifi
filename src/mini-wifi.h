@@ -11,12 +11,16 @@ class MiniWifi {
   uint16_t wifiWaitDelay;
   Stream* debugStream;
   boolean joinedWifi;
+  uint8_t wifiWaitRetries;
 
  public:
   MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
 
   void setWifiWaitDelay(uint16_t delay);
   void setDebugStream(Stream* stream);
+  void setWifiWaitRetries(uint8_t retries);
+
+  void disableWiFi();
 
   void joinWifi();
 
