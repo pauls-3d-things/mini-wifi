@@ -8,6 +8,6 @@
         "branch": "master"
     },
     "frameworks": "arduino",
-    "platforms": "espressif8266",
-    "version": "2.0.0"
+    "platforms": ["espressif8266","espressif32"],
+    "version": "2.0.1"
 }

@@ -1,8 +1,15 @@
 
 #include "mini-wifi.h"
 
+#if defined(ESP8266)
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
+#elif defined(ESP32)
+#include <HTTPClient.h>
+#include <WiFi.h>
+#else
+#error only esp8266 and esp32 are supported
+#endif
 
 #define FPM_SLEEP_MAX_TIME 0xFFFFFFF
 
@@ -18,18 +25,17 @@ MiniWifi::MiniWifi(const char *hostName, const char *wifiSsid, const char *wifiP
 void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
 
 void MiniWifi::disableWiFi() {
-  // Serial.println("diconnecting client and wifi");
-  // client.disconnect();
-  wifi_station_disconnect();
-  wifi_set_opmode(NULL_MODE);
-  wifi_set_sleep_type(MODEM_SLEEP_T);
-  wifi_fpm_open();
-  wifi_fpm_do_sleep(FPM_SLEEP_MAX_TIME);
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
 }
 
 void MiniWifi::joinWifi() {
   joinedWifi = true;
-  WiFi.hostname(hostName);
+#if defined(ESP8266)
+  WiFi.hostname(this->hostName);
+#elif defined(ESP32)
+  WiFi.setHostname(this->hostName);
+#endif
   WiFi.mode(WIFI_STA);
 
   uint16_t retries = 0;
