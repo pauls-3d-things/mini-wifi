@@ -53,7 +53,7 @@ void MiniWifi::joinWifi() {
   } while (WiFi.status() != WL_CONNECTED && retries <= wifiWaitRetries);
 
   if (debugStream != NULL) {
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() == WL_CONNECTED) {
       debugStream->print("Connected to WiFi ");
       debugStream->print("IP: ");
       debugStream->println(WiFi.localIP().toString());
@@ -67,10 +67,6 @@ void MiniWifi::checkWifi() {
   if (!joinedWifi) {
     joinWifi();
     return;
-  }
-
-  if (debugStream != NULL) {
-    debugStream->println("Checking WiFi...");
   }
 
   if (WiFi.status() != WL_CONNECTED) {
