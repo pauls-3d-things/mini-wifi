@@ -27,6 +27,7 @@ void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; 
 void MiniWifi::disableWiFi() {
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
+  joinedWifi = false;
 }
 
 void MiniWifi::joinWifi() {
