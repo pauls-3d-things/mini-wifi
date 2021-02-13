@@ -28,10 +28,12 @@ void MiniWifi::disableWiFi() {
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
   joinedWifi = false;
+  _isEnabled = false;
 }
 
 void MiniWifi::joinWifi() {
   joinedWifi = true;
+  _isEnabled = true;
 #if defined(ESP8266)
   WiFi.hostname(this->hostName);
 #elif defined(ESP32)
@@ -82,6 +84,8 @@ void MiniWifi::checkWifi() {
   yield();
 }
 
+bool MiniWifi::isEnabled() { return _isEnabled; }
+
 bool MiniWifi::isConnected() { return WiFi.status() == WL_CONNECTED; }
 int32_t MiniWifi::getSignalStrength() { return WiFi.RSSI(); }
 uint8_t MiniWifi::getSignalQuality() {
@@ -98,6 +102,7 @@ uint8_t MiniWifi::getSignalQuality() {
 }
 
 void MiniWifi::createWifi() {
+  _isEnabled = true;
   IPAddress Ip(192, 168, 1, 1);
   IPAddress NMask(255, 255, 255, 0);
   WiFi.mode(WIFI_AP);

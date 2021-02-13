@@ -12,7 +12,7 @@ class MiniWifi {
   Stream* debugStream;
   boolean joinedWifi;
   uint8_t wifiWaitRetries;
-
+  boolean _isEnabled;
  public:
   MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
 
@@ -21,7 +21,7 @@ class MiniWifi {
   void setWifiWaitRetries(uint8_t retries);
 
   void disableWiFi();
-
+  bool isEnabled();
   void joinWifi();
 
   void checkWifi();
