@@ -10,7 +10,6 @@ class MiniWifi {
   const char* wifiPass;
   uint16_t wifiWaitDelay;
   Stream* debugStream;
-  boolean joinedWifi;
   uint8_t wifiWaitRetries;
   boolean _isEnabled;
  public:

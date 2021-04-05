@@ -27,12 +27,10 @@ void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; 
 void MiniWifi::disableWiFi() {
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
-  joinedWifi = false;
   _isEnabled = false;
 }
 
 void MiniWifi::joinWifi() {
-  joinedWifi = true;
   _isEnabled = true;
 #if defined(ESP8266)
   WiFi.hostname(this->hostName);
@@ -73,11 +71,6 @@ void MiniWifi::joinWifi() {
 }
 
 void MiniWifi::checkWifi() {
-  if (!joinedWifi) {
-    joinWifi();
-    return;
-  }
-
   if (WiFi.status() != WL_CONNECTED) {
     joinWifi();
   }
