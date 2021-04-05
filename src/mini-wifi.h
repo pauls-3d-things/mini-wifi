@@ -8,8 +8,8 @@ class MiniWifi {
   const char* hostName;
   const char* wifiSsid;
   const char* wifiPass;
-  uint16_t wifiWaitDelay;
   Stream* debugStream;
+  uint16_t wifiWaitDelay;
   uint8_t wifiWaitRetries;
   boolean _isEnabled;
  public:
