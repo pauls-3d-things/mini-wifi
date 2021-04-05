@@ -79,16 +79,14 @@ void MiniWifi::checkWifi() {
 
 int32_t MiniWifi::getSignalStrength() { return WiFi.RSSI(); }
 uint8_t MiniWifi::getSignalQuality() {
-  int32_t rssi = getSignalStrength();
-  uint8_t quality = 0;
-  if (rssi < -100) {
-    quality = 0;
-  } else if (rssi > -50) {
-    quality = 100;
-  } else {
-    quality = 2 * (rssi + 100);
+  const int32_t rssi = getSignalStrength();
+  if (rssi <= -100) {
+    return 0;
+  } 
+  if (rssi => -50) {
+    return 100;
   }
-  return quality;
+  return 2 * (rssi + 100);
 }
 
 void MiniWifi::createWifi() {
