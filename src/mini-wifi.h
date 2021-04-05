@@ -15,16 +15,16 @@ class MiniWifi {
  public:
   MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
 
-  void setWifiWaitDelay(uint16_t delay);
-  void setDebugStream(Stream* stream);
-  void setWifiWaitRetries(uint8_t retries);
+  inline void MiniWifi::setWifiWaitDelay(uint16_t delay) { wifiWaitDelay = delay; }
+  inline void MiniWifi::setDebugStream(Stream *stream) { debugStream = stream; }
+  inline void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
 
   void disableWiFi();
-  bool isEnabled();
+  inline bool MiniWifi::isEnabled() { return _isEnabled; }
+  inline bool MiniWifi::isConnected() { return WiFi.status() == WL_CONNECTED; }
   void joinWifi();
 
   void checkWifi();
-  bool isConnected();
   int32_t getSignalStrength();
   uint8_t getSignalQuality();
 
@@ -33,5 +33,7 @@ class MiniWifi {
   void begin();
   int get(const char* url, char* resultBuf, int resultBufLen);
 };
+
+
 
 #endif

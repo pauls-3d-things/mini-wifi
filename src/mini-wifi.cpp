@@ -22,7 +22,6 @@ MiniWifi::MiniWifi(const char *hostName, const char *wifiSsid, const char *wifiP
   this->debugStream = NULL;
   this->joinedWifi = false;
 }
-void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
 
 void MiniWifi::disableWiFi() {
   WiFi.disconnect();
@@ -52,15 +51,15 @@ void MiniWifi::joinWifi() {
     unsigned long now = millis();
     while (now + wifiWaitDelay > millis()) {
       delay(50);
-      if (WiFi.status() == WL_CONNECTED) {
+      if (isConnected()) {
         break;
       }
     }
     retries++;
-  } while (WiFi.status() != WL_CONNECTED && retries <= wifiWaitRetries);
+  } while (!isConnected() && retries <= wifiWaitRetries);
 
   if (debugStream != NULL) {
-    if (WiFi.status() == WL_CONNECTED) {
+    if (isConnected()) {
       debugStream->print("Connected to WiFi ");
       debugStream->print("IP: ");
       debugStream->println(WiFi.localIP().toString());
@@ -71,15 +70,13 @@ void MiniWifi::joinWifi() {
 }
 
 void MiniWifi::checkWifi() {
-  if (WiFi.status() != WL_CONNECTED) {
+  if (!isConnected()) {
     joinWifi();
   }
   yield();
 }
 
-bool MiniWifi::isEnabled() { return _isEnabled; }
 
-bool MiniWifi::isConnected() { return WiFi.status() == WL_CONNECTED; }
 int32_t MiniWifi::getSignalStrength() { return WiFi.RSSI(); }
 uint8_t MiniWifi::getSignalQuality() {
   int32_t rssi = getSignalStrength();
@@ -109,8 +106,6 @@ void MiniWifi::createWifi() {
   }
 }
 
-void MiniWifi::setWifiWaitDelay(uint16_t delay) { wifiWaitDelay = delay; }
-void MiniWifi::setDebugStream(Stream *stream) { debugStream = stream; }
 
 int MiniWifi::get(const char *url, char *resultBuf, int resultBufLen) {
   int bytesRead = 0;
