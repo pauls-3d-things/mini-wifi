@@ -15,13 +15,13 @@ class MiniWifi {
  public:
   MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
 
-  inline void MiniWifi::setWifiWaitDelay(uint16_t delay) { wifiWaitDelay = delay; }
-  inline void MiniWifi::setDebugStream(Stream *stream) { debugStream = stream; }
-  inline void MiniWifi::setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
+  void setWifiWaitDelay(uint16_t delay) { wifiWaitDelay = delay; }
+  void setDebugStream(Stream *stream) { debugStream = stream; }
+  void setWifiWaitRetries(uint8_t retries) { wifiWaitRetries = retries; }
 
   void disableWiFi();
-  inline bool MiniWifi::isEnabled() { return _isEnabled; }
-  inline bool MiniWifi::isConnected() { return WiFi.status() == WL_CONNECTED; }
+  bool isEnabled() { return _isEnabled; }
+  bool isConnected() { return WiFi.status() == WL_CONNECTED; }
   void joinWifi();
 
   void checkWifi();
