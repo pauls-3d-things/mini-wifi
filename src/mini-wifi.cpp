@@ -72,6 +72,10 @@ void MiniWifi::joinWifi() {
   }
 }
 
+IPAddress MiniWifi::getIp() {
+  return WiFi.localIP();
+}
+
 void MiniWifi::checkWifi() {
   if (!joinedWifi) {
     joinWifi();

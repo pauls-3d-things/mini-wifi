@@ -13,6 +13,7 @@ class MiniWifi {
   boolean joinedWifi;
   uint8_t wifiWaitRetries;
   boolean _isEnabled;
+
  public:
   MiniWifi(const char* hostName, const char* wifiSsid, const char* wifiPass);
 
@@ -29,10 +30,13 @@ class MiniWifi {
   int32_t getSignalStrength();
   uint8_t getSignalQuality();
 
+  IPAddress getIp();
+
   void createWifi();
 
   void begin();
   int get(const char* url, char* resultBuf, int resultBufLen);
+  // TODO: post
 };
 
 #endif
